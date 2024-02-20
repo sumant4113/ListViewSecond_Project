@@ -1,22 +1,32 @@
 package com.example.listviewsecondproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.Button;
+import android.widget.Toast;
 
-import com.example.listviewsecondproject.userdetails.UserAdapter;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.listviewsecondproject.modules.Food;
+import com.example.listviewsecondproject.modules.FoodAdapter;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private RecyclerView rvFood;
+    private ArrayList<Food> foodArrayList = new ArrayList<>();
 
-    private ListView lvUser;
-    private UserAdapter userAdapter;
-    private ArrayList<User> userArrayList = new ArrayList<>();
+    private static final String TAG = "MainActivity";
+    private FoodAdapter foodAdapter;
+    private Toolbar toolbar;
+
+    private Button btnClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,34 +37,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        lvUser = findViewById(R.id.lv_user);
+        toolbar = findViewById(R.id.toolbar);
+        btnClick = findViewById(R.id.btn_click);
+        setSupportActionBar(toolbar);
 
-        userArrayList.add(new User("Nilkanth Sutariya", "How are you ?", "8:49 am", "+911234567890", R.drawable.img_profile4));
-        userArrayList.add(new User("Meet Sabhadiya", "Good", "7:49 am", "+911234567890", R.drawable.img_profile2));
-        userArrayList.add(new User("Jemin Vamja", "Happy BirthDay", "8:33 am", "+911234567890", R.drawable.img_profile5));
-        userArrayList.add(new User("Jai bhai", "Duck You!!!", "8:23 am", "+911234567890", R.drawable.img_profile4));
-        userArrayList.add(new User("Jainesh Goal", "Byyy", "5:19 am", "+911234567890", R.drawable.img_profile5));
-        userArrayList.add(new User("Tripti ", "How are you ?", "9:49 am", "+911234567890", R.drawable.img_profile2));
-        userArrayList.add(new User("Miya Bhai", "Hiii", "1:05 am", "+911234567890", R.drawable.img_profile5));
-        userArrayList.add(new User("Somya Maam", "Exellent", "10:05 am", "+911234567890", R.drawable.img_profile4));
+        rvFood = findViewById(R.id.rv_food);
 
-        userAdapter = new UserAdapter(MainActivity.this,userArrayList);
-        lvUser.setAdapter(userAdapter);
+        foodArrayList.add(new Food(R.drawable.img_pizza1, "Peppy Paneer", "$10.99", "Chunky paneer with crisp capsicum and spicy red pepper"));
+        foodArrayList.add(new Food(R.drawable.img_pizza2, "Mexican Green Wave", "$39.99", "A pizza loaded with crunchy onions, crisp capsicum, juicy tomatoes"));
+        foodArrayList.add(new Food(R.drawable.img_pizza3, "Fresh Farm House", "$13.99", "crisp capsicum, succulent mushrooms and fresh tomatoes"));
+        foodArrayList.add(new Food(R.drawable.img_pizza4, "Paneer Fresh ", "$5.99", "A pizza loaded with crunchy onions, crisp capsicum, juicy tomatoes"));
+        foodArrayList.add(new Food(R.drawable.img_pizza5, "Veggie Pizza", "$5.99", "Chunky paneer with crisp capsicum and spicy red pepper"));
 
-        lvUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        foodAdapter = new FoodAdapter(MainActivity.this, foodArrayList);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(MainActivity.this, 2);
+        rvFood.setLayoutManager(layoutManager);
+        rvFood.setAdapter(foodAdapter);
+
+        btnClick.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                User user = userArrayList.get(i);
+            public void onClick(View view) {
 
-                Intent intent = new Intent(MainActivity.this , DetailActivity.class);
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                try {
+                    mediaPlayer.setDataSource("https://www.youtube.com/watch?v=LKxMypKIclc&ab_channel=VyankateshBhandare");
+                    mediaPlayer.setLooping(false);
+                    mediaPlayer.prepare();
 
-                intent.putExtra("UserName",user.userName);
-                intent.putExtra("LastMsg",user.userMsg);
-                intent.putExtra("LastTime",user.lastTime);
-                intent.putExtra("UserMobileNo",user.phoneNo);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "onClick: ///***"+mediaPlayer);
+                mediaPlayer.start();
 
-                startActivity(intent);
-
+                Toast.makeText(MainActivity.this, "sdlkhfg", Toast.LENGTH_SHORT).show();
             }
         });
 
